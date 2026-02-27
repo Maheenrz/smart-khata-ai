@@ -1,22 +1,34 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import app.models # it registers the models in db (neon pg here)
-from app.database import engine,Base
-from app.routers import auth
+from app.database import engine, Base
+import app.models
+import os
 
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="Smart Khata AI")
-
-app.include_router(auth.router)
+app = FastAPI(title="Smart Khata AI",
+              docs_url="/docs" if os.getenv("ENV") == "development" else None,
+              redoc_url=None
+)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['https://localhost:5173'],
-    allow_headers=['*'],
-    allow_methods=['*'],
-    allow_credentials=True
+    allow_origins=["http://localhost:5173", "http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+    expose_headers=["*"],
 )
+
+from app.routers import auth, customers, transactions, ai, community
+
+app.include_router(auth.router)
+app.include_router(customers.router)
+app.include_router(transactions.router)
+app.include_router(ai.router)
+app.include_router(community.router)
+
+
 
 @app.get("/")
 def root():

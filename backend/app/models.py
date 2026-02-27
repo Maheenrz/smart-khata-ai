@@ -20,6 +20,7 @@ class Customer(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
     phone = Column(String)
+    area = Column(String, default="Unknown")
     owner_id = Column(Integer, ForeignKey("users.id"))
     created_at = Column(DateTime, default=datetime.utcnow)
     owner = relationship("User", back_populates="customers")
