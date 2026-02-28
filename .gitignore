@@ -1,0 +1,21 @@
+# Go to your project root (not backend, not frontend — the main folder)
+cd smart-khata-ai
+
+cat > .gitignore << 'EOF'
+# Backend
+backend/venv/
+backend/__pycache__/
+backend/.env
+backend/app/__pycache__/
+backend/app/routers/__pycache__/
+backend/app/services/__pycache__/
+**/*.pyc
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# General
+.DS_Store
+.env
+EOF
