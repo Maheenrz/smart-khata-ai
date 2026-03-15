@@ -107,7 +107,7 @@ export default function Login() {
             The credit department your shop never had.
           </h1>
           <p className="text-white/50 text-base md:text-lg leading-relaxed">
-            Pakistan ke 3.5 million small retailers manage credit in a notebook.
+            Pakistan's 3.5 million small retailers manage credit in a notebook.
             We give them AI-grade financial intelligence.
           </p>
         </div>
@@ -288,3 +288,22 @@ export default function Login() {
     </div>
   )
 }
+
+
+
+// rm -rf venv
+
+// # Recreate with explicit python3
+// python3 -m venv venv
+
+// # Fix permissions on the entire venv
+// chmod -R 755 venv
+
+// # Activate
+// source venv/bin/activate
+
+// # Install packages
+// pip install -r requirements.txt
+
+// # Run using python -m instead of direct command
+// python -m uvicorn app.main:app --reload

@@ -27,14 +27,15 @@ export default function Navbar() {
 
           {/* Logo */}
           <NavLink to="/" className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg flex items-center justify-center text-green-950 font-bold">
-            <img src={ledger} alt="Ledger" className="w-5 h-5 invert brightness-0" />
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center font-bold">
+              <img src={ledger} alt="Ledger" className="w-5 h-5 brightness-0 invert" />
             </div>
             <div className="hidden sm:block">
               <div className="text-white font-semibold text-base leading-tight"
-                style={{ fontFamily: 'Playfair Display, serif' }}>
+                style={{ fontFamily: 'Cormorant Garamond, serif' }}>
                 Smart Khata AI
               </div>
+              <div className="text-white/30 text-[9px] tracking-widest">ذہین کھاتہ</div>
             </div>
           </NavLink>
 

@@ -4,17 +4,15 @@ import api from "../api/axiosClient"
 import AitbaarScoreBadge from "../components/AitbaarScoreBadge"
 
 function formatAmount(amount) {
-  if (amount >= 100000) return `₨ ${(amount / 100000).toFixed(1)}L`
-  if (amount >= 1000) return `₨ ${(amount / 1000).toFixed(0)}k`
-  return `₨ ${amount.toLocaleString()}`
+  if (amount >= 100000) return `₨${(amount / 100000).toFixed(1)}L`
+  if (amount >= 1000) return `₨${(amount / 1000).toFixed(0)}k`
+  return `₨${amount.toLocaleString()}`
 }
 
 function formatDate(dateStr) {
   if (!dateStr) return "—"
   return new Date(dateStr).toLocaleDateString("en-PK", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
+    day: "numeric", month: "short", year: "numeric",
   })
 }
 
@@ -42,11 +40,8 @@ export default function CustomerDetail() {
     try {
       const res = await api.get(`/customers/${id}`)
       setCustomer(res.data)
-    } catch (err) {
-      console.error(err)
-    } finally {
-      setLoading(false)
-    }
+    } catch (err) { console.error(err) }
+    finally { setLoading(false) }
   }
 
   async function handleAddTransaction(e) {
@@ -61,11 +56,8 @@ export default function CustomerDetail() {
       setNewTxn({ amount: "", type: "credit" })
       setShowTxnModal(false)
       loadCustomer()
-    } catch (err) {
-      console.error(err)
-    } finally {
-      setAdding(false)
-    }
+    } catch (err) { console.error(err) }
+    finally { setAdding(false) }
   }
 
   async function handleMarkRepaid(txnId) {
@@ -73,11 +65,8 @@ export default function CustomerDetail() {
     try {
       await api.patch(`/transactions/repaid/${txnId}`)
       loadCustomer()
-    } catch (err) {
-      console.error(err)
-    } finally {
-      setMarkingId(null)
-    }
+    } catch (err) { console.error(err) }
+    finally { setMarkingId(null) }
   }
 
   async function generateMessage() {
@@ -89,11 +78,8 @@ export default function CustomerDetail() {
         language: msgLanguage,
       })
       setMessage(res.data.message)
-    } catch (err) {
-      console.error(err)
-    } finally {
-      setMsgLoading(false)
-    }
+    } catch (err) { console.error(err) }
+    finally { setMsgLoading(false) }
   }
 
   async function handleDelete() {
@@ -101,11 +87,8 @@ export default function CustomerDetail() {
     try {
       await api.delete(`/customers/${id}`)
       navigate("/customers")
-    } catch (err) {
-      console.error(err)
-    } finally {
-      setDeleting(false)
-    }
+    } catch (err) { console.error(err) }
+    finally { setDeleting(false) }
   }
 
   function copyMessage() {
@@ -114,24 +97,24 @@ export default function CustomerDetail() {
     setTimeout(() => setCopied(false), 2000)
   }
 
-  const totalDue =
-    customer?.transactions
-      ?.filter((t) => !t.is_repaid)
-      .reduce((sum, t) => sum + t.amount, 0) || 0
-
+  const totalDue = customer?.transactions?.filter((t) => !t.is_repaid).reduce((sum, t) => sum + t.amount, 0) || 0
   const whatsappLink = customer
     ? `https://wa.me/92${customer.phone.replace(/^0/, "")}?text=${encodeURIComponent(message)}`
     : "#"
 
   if (loading) return (
-    <div className="flex items-center justify-center min-h-[60vh] text-gray-400">
-      Loading customer details...
+    <div className="flex items-center justify-center min-h-[60vh]">
+      <div className="text-center">
+        <p className="text-gray-400 text-sm">Loading customer details...</p>
+      </div>
     </div>
   )
 
   if (!customer) return (
-    <div className="flex items-center justify-center min-h-[60vh] text-gray-400">
-      Customer not found.
+    <div className="flex items-center justify-center min-h-[60vh]">
+      <div className="text-center">
+        <p className="text-gray-400 text-sm">Customer not found.</p>
+      </div>
     </div>
   )
 
@@ -159,7 +142,7 @@ export default function CustomerDetail() {
             <p className="text-gray-400 text-sm mt-0.5">{customer.phone}</p>
             {customer.area && (
               <span className="inline-block bg-stone-100 text-gray-600 text-xs px-2.5 py-1 rounded-full font-medium mt-1">
-                {customer.area}
+                📍 {customer.area}
               </span>
             )}
           </div>
@@ -167,13 +150,17 @@ export default function CustomerDetail() {
           <AitbaarScoreBadge score={customer.aitbaar_score} />
 
           <div className="pt-2 border-t border-stone-100">
-            <p className="text-xs text-gray-400 mb-1">کل باقی — Total Due</p>
+            <p className="text-xs text-gray-400 mb-1">کل باقی رقم — Total Due</p>
             <p className={`text-3xl font-bold ${totalDue > 0 ? "text-red-600" : "text-emerald-600"}`}
               style={{ fontFamily: "Cormorant Garamond, serif" }}>
               {formatAmount(totalDue)}
             </p>
+            {totalDue === 0 && (
+              <p className="text-emerald-600 text-xs mt-1">✓ All clear — no dues</p>
+            )}
           </div>
 
+          {/* FIX 1: English add transaction button */}
           <button
             onClick={() => setShowTxnModal(true)}
             className="w-full bg-green-950 hover:bg-green-900 text-white py-2.5 rounded-xl text-sm font-semibold transition-colors"
@@ -181,7 +168,7 @@ export default function CustomerDetail() {
             + Add Transaction
           </button>
 
-          {/* Delete Button */}
+          {/* FIX 2: English delete confirmation */}
           {!confirmDelete ? (
             <button
               onClick={() => setConfirmDelete(true)}
@@ -221,26 +208,27 @@ export default function CustomerDetail() {
             </span>
             <h3 className="text-white font-bold mt-2 mb-0.5"
               style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "1.2rem" }}>
-              WhatsApp Reminder Generator
+              واٹس ایپ یاددہانی
             </h3>
-            <p className="text-white/40 text-xs">واٹس ایپ یاددہانی</p>
+            <p className="text-white/40 text-xs">WhatsApp Reminder Generator</p>
           </div>
 
           <div className="flex gap-2">
             {[
-              { value: "roman_urdu", label: "Roman Urdu" },
-              { value: "english", label: "English" },
+              { value: "roman_urdu", label: "Roman Urdu", sub: "رومن اردو" },
+              { value: "english",    label: "English",    sub: "انگریزی"  },
             ].map((opt) => (
               <button
                 key={opt.value}
                 onClick={() => setMsgLanguage(opt.value)}
-                className={`px-4 py-2 rounded-xl text-xs font-semibold transition-colors ${
+                className={`px-4 py-2 rounded-xl text-xs font-semibold transition-colors flex flex-col items-center ${
                   msgLanguage === opt.value
                     ? "bg-amber-500 text-green-950"
                     : "bg-white/10 text-white/60 hover:bg-white/20"
                 }`}
               >
-                {opt.label}
+                <span>{opt.label}</span>
+                <span className="text-[9px] opacity-70">{opt.sub}</span>
               </button>
             ))}
           </div>
@@ -255,7 +243,7 @@ export default function CustomerDetail() {
 
           {totalDue === 0 && (
             <p className="text-white/40 text-xs">
-              No outstanding dues — nothing to remind about.
+              ✓ No outstanding dues — nothing to remind about.
             </p>
           )}
 
@@ -289,9 +277,9 @@ export default function CustomerDetail() {
           <div>
             <h3 className="font-bold text-gray-900"
               style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "1.15rem" }}>
-              Transaction History
+              لین دین کی تاریخ
             </h3>
-            <p className="text-gray-400 text-xs">لین دین</p>
+            <p className="text-gray-400 text-xs">Transaction History</p>
           </div>
           <div className="flex gap-2">
             <span className="bg-stone-100 text-gray-600 text-xs px-2.5 py-1 rounded-full font-medium">
@@ -306,8 +294,8 @@ export default function CustomerDetail() {
         {customer.transactions.length === 0 ? (
           <div className="flex flex-col items-center py-14 text-center">
             <p className="text-3xl mb-2">📋</p>
-            <p className="text-sm text-gray-400 font-medium">No transactions yet</p>
-            <p className="text-xs text-gray-300 mt-1">Add the first credit entry above</p>
+            <p className="text-sm text-gray-400 font-medium">ابھی کوئی لین دین نہیں</p>
+            <p className="text-xs text-gray-300 mt-1">No transactions yet</p>
           </div>
         ) : (
           <div className="divide-y divide-stone-50">
@@ -321,12 +309,9 @@ export default function CustomerDetail() {
                     !t.is_repaid ? "hover:bg-stone-50" : "opacity-50 hover:opacity-70"
                   }`}
                 >
-                  {/* Left */}
                   <div className="flex items-center gap-3">
                     <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 font-bold text-base ${
-                      t.type === "credit"
-                        ? "bg-red-50 text-red-500"
-                        : "bg-emerald-50 text-emerald-600"
+                      t.type === "credit" ? "bg-red-50 text-red-500" : "bg-emerald-50 text-emerald-600"
                     }`}>
                       {t.type === "credit" ? "↑" : "↓"}
                     </div>
@@ -352,7 +337,6 @@ export default function CustomerDetail() {
                     </div>
                   </div>
 
-                  {/* Right */}
                   <div className="flex items-center gap-3 flex-shrink-0">
                     <p className={`font-bold text-sm ${
                       t.type === "credit" ? "text-red-600" : "text-emerald-600"
@@ -412,20 +396,21 @@ export default function CustomerDetail() {
                 </label>
                 <div className="flex gap-2">
                   {[
-                    { value: "credit", label: "Credit — اُدھار" },
-                    { value: "payment", label: "Payment — ادائیگی" },
+                    { value: "credit",  label: "Credit",  sub: "اُدھار"   },
+                    { value: "payment", label: "Payment", sub: "ادائیگی" },
                   ].map((opt) => (
                     <button
                       key={opt.value}
                       type="button"
                       onClick={() => setNewTxn({ ...newTxn, type: opt.value })}
-                      className={`flex-1 py-2.5 rounded-xl text-xs font-semibold border transition-colors ${
+                      className={`flex-1 py-2.5 rounded-xl text-xs font-semibold border transition-colors flex flex-col items-center gap-0.5 ${
                         newTxn.type === opt.value
                           ? "bg-green-950 text-white border-green-950"
                           : "bg-white text-gray-600 border-stone-200 hover:border-green-900"
                       }`}
                     >
-                      {opt.label}
+                      <span>{opt.label}</span>
+                      <span className="opacity-60 text-[10px]">{opt.sub}</span>
                     </button>
                   ))}
                 </div>
