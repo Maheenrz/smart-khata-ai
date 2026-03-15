@@ -11,24 +11,9 @@ This tries to fix that.
 
 ## How It Works
 
-```
-Shopkeeper logs a credit transaction
-        │
-        ▼
-PostgreSQL stores transaction history
-        │
-        ├──► Aitbaar Score recalculates
-        │         (repayment rate + speed → 0-100 score)
-        │
-        ├──► Cash Flow engine updates
-        │         (predicts when each customer will pay based on their history)
-        │
-        ├──► Intelligence layer runs
-        │         (finds payment patterns by week, month, customer trend)
-        │
-        └──► Community Risk checks
-                  (matches phone numbers across other shops in same area)
-```
+![Smart Khata AI Workflow](./frontend/public/smart_khata_detailed_workflow.svg)
+
+Every transaction a shopkeeper logs triggers four parallel engines — credit scoring, cash flow prediction, pattern intelligence, and community risk — which all feed into GPT-4o to produce actionable advice and WhatsApp messages.
 
 ---
 
@@ -38,11 +23,11 @@ PostgreSQL stores transaction history
 
 **Cash Flow Forecasting** — For each customer with unpaid dues, the system estimates when payment is expected based on their personal repayment history. Flags customers who are more than 7 days past their expected date, and fires a cash shortage warning if over 30% of outstanding is with risky customers.
 
-**Business Intelligence** — This is the part most khata apps skip. The intelligence tab mines historical transaction data to show: which week of the month collections are fastest vs slowest, which months are historically bad, and which customers are deteriorating (paying slower over time) vs improving. Gives a weekly forecast based on real past patterns.
+**Business Intelligence** — The part most khata apps skip. Mines historical transaction data to show which week of the month collections are fastest vs slowest, which months are historically bad, and which customers are deteriorating before they actually default. Gives a weekly forecast based on real past patterns.
 
-**AI WhatsApp Messages** — Generates a personalized payment reminder in Roman Urdu or English using GPT-4o. Takes customer name, amount owed, and shop name to make it feel personal rather than a generic template.
+**AI WhatsApp Messages** — Generates a personalized payment reminder in Roman Urdu or English using GPT-4o. Takes customer name, amount owed, and shop name to feel personal rather than a generic template.
 
-**Community Risk Network** — Matches customers across shops by phone number. If the same person appears in two or more shops in the same area with a low average score, they get flagged as a community risk. Basically a shared blacklist built from real data, not rumors.
+**Community Risk Network** — Matches customers across shops by phone number. If the same person appears in two or more shops in the same area with a low average score, they get flagged as a community risk — a shared blacklist built from real data, not rumors.
 
 ---
 
